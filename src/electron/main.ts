@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron/main';
+import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
 
 const createWindow = () => {
