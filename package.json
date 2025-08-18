@@ -10,12 +10,15 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "transpile:electron": "tsc --project src/electron/tsconfig.json",
+    "transpile:electron": "tsc --project src/electron/tsconfig.json -w",
     "dist:mac": "pnpm transpile:electron && pnpm build && electron-builder --mac --arm64",
     "dist:linux": "pnpm transpile:electron && pnpm build && electron-builder --linux --x64",
     "dist:win": "pnpm transpile:electron && pnpm build && electron-builder --win --x64"
   },
   "dependencies": {
+    "@hono/node-server": "^1.18.2",
+    "dotenv": "^17.2.1",
+    "hono": "^4.9.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
