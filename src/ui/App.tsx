@@ -1,35 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import './App.css';
+import { useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [ sessionKey, setSessionKey ] = useState<string | undefined>();
+  const [ logs, setLogs ] = useState<string[] | undefined>();
+
+  //@ts-ignore
+  window.electron.send("send-session-key");
+  //@ts-ignore
+  window.electron.receive("session-key-command", (sessionKey) => {
+    setSessionKey(sessionKey);
+  });
+
+  //@ts-ignore
+  window.electron.receive("logs-command", (data) => {
+    if (!logs) {
+      setLogs([data]);
+      return;
+    }
+    const clone = logs.slice();
+    clone.push(data);
+    setLogs(logs);
+    console.log(logs);
+  });
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <main className='main'>
+        <section className='card'>
+          <h1 className='title'>FPROXY</h1>
+          { sessionKey &&
+            <span>
+              <strong>Session Key</strong>
+              <p>{sessionKey}</p>
+            </span>
+          }
+          <div className='divider'></div>
+          {logs &&
+            <>
+            <div>
+              <strong>Message</strong>
+              {logs?.map((log, index) => (
+                <p key={index}>{log}</p>
+              ))}
+            </div>
+            <div className='divider'></div>
+            </>
+          }
+        </section>
+      </main>
     </>
   )
 }
 
-export default App
+export default App;
