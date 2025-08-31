@@ -5,6 +5,7 @@ import { Socket } from "node:net";
 import crypto from "node:crypto";
 import { CustomPromiseType, TcpErrorType, TCPReqType, TCPResType } from "./definitions.js";
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 import { serve } from '@hono/node-server';
 import { bearerAuth } from 'hono/bearer-auth';
 import dotenv from 'dotenv';
@@ -115,7 +116,12 @@ const API_KEY = process.env.FPROXY_API_KEY;
 const SESSION_KEY = crypto.randomBytes(32).toString('hex');
 
 // Middleware
-honoApp.use('/api/*', 
+honoApp.use('/api/*',
+  cors({
+    origin: [ "https://ftrade.vercel.app", "http://127.0.0.1:3000"],
+    allowHeaders: ['x-session-header', 'Authorization'],
+    allowMethods: ['GET']
+  }),
   bearerAuth({
     async verifyToken(token, _) {
       // Verifying API_KEY is legit
