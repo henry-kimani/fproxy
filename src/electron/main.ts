@@ -118,7 +118,7 @@ const SESSION_KEY = crypto.randomBytes(32).toString('hex');
 // Middleware
 honoApp.use('/api/*',
   cors({
-    origin: [ "https://ftrade.vercel.app", "http://127.0.0.1:3000"],
+    origin: "http://127.0.0.1:3000",
     allowHeaders: ['x-session-header', 'Authorization'],
     allowMethods: ['GET']
   }),
